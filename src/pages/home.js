@@ -4,9 +4,9 @@ import axios from "axios";
 import queryString from "query-string";
 import Pagination from "react-bootstrap/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import _ from "lodash";
-import { faSort, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSort } from "@fortawesome/free-solid-svg-icons";
 import "./SearchForm.css";
+import Avatar from "react-avatar";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -20,17 +20,7 @@ export default class Home extends React.Component {
     data.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));
     this.setState({ persons: data });
   }
-  handlePgination = (pageNo, size) => {
-    let active = 2;
-    let items = [];
-    for (let number = 1; number <= 10; number++) {
-      items.push(
-        <Pagination.Item key={number} active={number === active}>
-          {number}
-        </Pagination.Item>
-      );
-    }
-  };
+
   searchHandler = () => {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
@@ -53,10 +43,6 @@ export default class Home extends React.Component {
     axios.get(`https://jsonplaceholder.typicode.com/users`).then((res) => {
       const persons = res.data;
       this.setState({ persons });
-      let data = {};
-      data.pageNo = 1;
-      data.size = 10;
-      let query = queryString.stringify(data);
     });
   }
   render() {
@@ -78,6 +64,7 @@ export default class Home extends React.Component {
           <thead>
             <tr class="table-primary text-center">
               <th>Id</th>
+              <th></th>
               <th>
                 Name
                 <FontAwesomeIcon
@@ -97,7 +84,7 @@ export default class Home extends React.Component {
               </th>
               <th>phone</th>
               <th>
-                website
+                Company
                 <FontAwesomeIcon
                   icon={faSort}
                   style={{ color: "#0066ff" }}
@@ -112,6 +99,9 @@ export default class Home extends React.Component {
                 return (
                   <tr key={index}>
                     <td>{persons.id}</td>
+                    <td>
+                      <Avatar name={persons.name} size={45} round={true} />
+                    </td>
                     <td>{persons.name}</td>
                     <td>{persons.username}</td>
                     <td>{persons.email}</td>
@@ -128,27 +118,6 @@ export default class Home extends React.Component {
           </tbody>
         </table>
         <Pagination defaultCurrent={6} total={500} />
-
-        <Pagination
-          style={{ marginLeft: "60%", marginTop: "5%" }}
-          onChange={(pageNo, size) => this.handlePgination(pageNo, size)}
-        >
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item active>{1}</Pagination.Item>
-          <Pagination.Ellipsis />
-
-          <Pagination.Item>{10}</Pagination.Item>
-          <Pagination.Item>{11}</Pagination.Item>
-          <Pagination.Item>{12}</Pagination.Item>
-          <Pagination.Item>{13}</Pagination.Item>
-          <Pagination.Item disabled>{14}</Pagination.Item>
-
-          <Pagination.Ellipsis />
-          <Pagination.Item>{20}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
-        </Pagination>
       </PageWrapper>
     );
   }
